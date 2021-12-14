@@ -84,12 +84,12 @@ def test_tree(keypoints):
         problems.append('Left leg not straight')
     if angle(keypoints[12], keypoints[14], keypoints[16]) > 135:  # angle between line knee-hip and knee-ankle
         problems.append('Right foot not high enough')
-    if np.linalg.norm(keypoints[9] - keypoints[10]) > 0.1:  # distance between wrists
-        problems.append('Hands not touching')
     if distance(keypoints[7], keypoints[5], keypoints[9]) > 0.1:  # distance between elbow and line from shoulder to wrist
         problems.append('Left arm not straight')
     if distance(keypoints[8], keypoints[6], keypoints[10]) > 0.1:  # distance between elbow and line from shoulder to wrist
         problems.append('Right arm not straight')
+    if keypoints[9][0] > keypoints[7][0] or keypoints[10][0] > keypoints[8][0]:  # wrist above or below elbow
+        problems.append('Arms not in the air')
     print(problems)
     return problems
 
