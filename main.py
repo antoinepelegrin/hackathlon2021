@@ -48,6 +48,7 @@ class MainApp(App):
 
     def _nextMovement(self):
         self.count = 0
+        self.stopWatchLabel.text = str(self.count)
         nb_of_movements = len(self.mvmt_array)
         self.mvmt_nb = (self.mvmt_nb + 1)%nb_of_movements
         print('CHANGING MOVEMENT TO: ' + self.mvmt_array[self.mvmt_nb])
@@ -63,8 +64,8 @@ class MainApp(App):
         return newvalue[:,:,:3]
 
     def _convertToKivy(self, np_array):
-        texture = Texture.create(size=(16, 16), colorfmt="rgb")
         data = np_array.tostring()
+        texture = Texture.create(size=(np_array.shape[0], np_array.shape[1]), colorfmt="rgb")
         texture.blit_buffer(data, bufferfmt="ubyte", colorfmt="rgb")
         print(texture)
 
