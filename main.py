@@ -5,6 +5,10 @@ from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
 from kivy.clock import Clock
 
+from kivy.uix.label import Label
+from kivy.animation import Animation
+from kivy.properties import StringProperty, NumericProperty
+
 import cv2
 import numpy as np
 
@@ -20,17 +24,30 @@ class Foo(object):
 
 class MainApp(App):
 
+    # Class variables
+
+    count = 0
+    routineStarted = False
+    stopWatchLabel = Label(text = 'Start a routine!')
+    buttonLabel = Label(text = 'START')
+    camera = Camera(play=True, resolution=(640, 480))
+
+    # Method when pressing button
+
     def buttonCallback(self, instance):
         print('IN BUTTON CALLBACK')
 
         if not self.routineStarted:
             self.routineStarted = True
+            self.buttonLabel.text = 'STOP'
             Clock.schedule_interval(self.clockCallback, 0.5)
-            print("STARTING ROUTINE")
+
         else:
             self.routineStarted = False
             Clock.unschedule(self.clockCallback)
-            print('STOPPING ROUTINE')
+            self.count = 0
+            self.stopWatchLabel.text = 'Start a routine!'
+            self.buttonLabel.text = 'STOP'
 
 
     # MAIN LOOP
@@ -41,27 +58,33 @@ class MainApp(App):
         newvalue = newvalue.reshape(height, width, 4)
         return newvalue[:,:,:3]
 
+    def _updateStopWatch(self):
+        self.count = self.count + 1
+        self.stopWatchLabel.text = str(self.count)
+
+
     def clockCallback(self, instance):
-        print("IN CLOCK CALLBACK")
+        self._updateStopWatch()
         numpy_array = self._convertToNumpy(self.camera.texture)
         keys = movenet(numpy_array)
         test_warrior(keys)
 
-    def build(self):
-        self.BUTTON_TEXT = {
-            True: "STOP ROUTINE",
-            False: "START ROUTINE"
-        }
-        self.routineStarted = False
+    # BUILD METHOD
 
+    def build(self):
+
+        button = Button(text=self.buttonLabel.text)
+        button.bind(on_press=self.buttonCallback)
         self.camera = Camera(play=True, resolution=(480, 480))
 
         btn1 = Button(text=self.BUTTON_TEXT[self.routineStarted])
         btn1.bind(on_press=self.buttonCallback)
 
         layout = BoxLayout(orientation='horizontal')
+
+        layout.add_widget(self.stopWatchLabel)
         layout.add_widget(self.camera)
-        layout.add_widget(btn1)
+        layout.add_widget(button)
 
         return layout
 
