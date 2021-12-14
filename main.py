@@ -19,7 +19,7 @@ class MainApp(App):
 
     # Class variables
 
-    mvmt_array = ['warrior']
+    mvmt_array = ['tree', 'warrior']
     mvmt_nb = 0
     
     count = 0
@@ -79,7 +79,7 @@ class MainApp(App):
 
         test = TESTS[self.mvmt_array[self.mvmt_nb]]
 
-        if test(keys) != []:
+        if test(keys) == []:
             self._updateStopWatch()
         else:
             print('wrong pause!')
