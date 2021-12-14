@@ -8,7 +8,7 @@ from kivy.clock import Clock
 import cv2
 import numpy as np
 
-#from utils
+from utils import movenet, test_warrior
 
 
 class Foo(object):
@@ -39,12 +39,13 @@ class MainApp(App):
         height, width = image.height, image.width
         newvalue = np.frombuffer(image.pixels, np.uint8)
         newvalue = newvalue.reshape(height, width, 4)
-        return newvalue
+        return newvalue[:,:,:3]
 
     def clockCallback(self, instance):
         print("IN CLOCK CALLBACK")
         numpy_array = self._convertToNumpy(self.camera.texture)
-        print(numpy_array)
+        keys = movenet(numpy_array)
+        test_warrior(keys)
 
     def build(self):
         self.BUTTON_TEXT = {
@@ -53,7 +54,7 @@ class MainApp(App):
         }
         self.routineStarted = False
 
-        self.camera = Camera(play=True, resolution=(640, 480))
+        self.camera = Camera(play=True, resolution=(480, 480))
 
         btn1 = Button(text=self.BUTTON_TEXT[self.routineStarted])
         btn1.bind(on_press=self.buttonCallback)
