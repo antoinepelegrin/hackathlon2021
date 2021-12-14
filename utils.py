@@ -51,11 +51,3 @@ def movenet(image_path):
     # Get the model prediction.
     keypoints_with_scores = interpreter.get_tensor(output_details[0]['index'])
     return keypoints_with_scores
-
-
-image_path = 'images/316.jpg'
-
-t0 = time.time()
-print(movenet(image_path))
-t1 = time.time()
-print(t1-t0)
