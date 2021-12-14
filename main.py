@@ -12,12 +12,16 @@ from kivy.properties import StringProperty, NumericProperty
 import cv2
 import numpy as np
 
-from utils import movenet, test_warrior
+from utils import movenet, test_warrior, TESTS
 
 class MainApp(App):
 
     # Class variables
 
+    mvmt_array = ['warrior']
+    mvmt_nb = 0
+    
+    
     count = 0
     routineStarted = False
     stopWatchLabel = Label(text = 'Start a routine!')
@@ -43,6 +47,9 @@ class MainApp(App):
 
     # MAIN LOOP
 
+    def _updateMovement(self):
+        print('CHANGING MOVEMENT')
+
     def _convertToNumpy(self, image):
         height, width = image.height, image.width
         newvalue = np.frombuffer(image.pixels, np.uint8)
@@ -54,11 +61,17 @@ class MainApp(App):
         self.stopWatchLabel.text = str(self.count)
 
     def clockCallback(self, instance):
-        self._updateStopWatch()
+
         numpy_array = self._convertToNumpy(self.camera.texture)
         keys = movenet(numpy_array)
-        if test_warrior(keys) != []:
-            self.count = 0
+        
+        test = TESTS[self.mvmt_array[self.mvmt_nb]]
+
+        if test(keys) == []:
+            self._updateStopWatch()
+        else:
+            print('wrong pause!')
+
 
     # BUILD METHOD
 
