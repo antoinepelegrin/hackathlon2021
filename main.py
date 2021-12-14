@@ -53,12 +53,12 @@ class MainApp(App):
         self.count = self.count + 1
         self.stopWatchLabel.text = str(self.count)
 
-
     def clockCallback(self, instance):
         self._updateStopWatch()
         numpy_array = self._convertToNumpy(self.camera.texture)
         keys = movenet(numpy_array)
-        test_warrior(keys)
+        if test_warrior(keys) != []:
+            self.count = 0
 
     # BUILD METHOD
 
