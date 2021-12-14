@@ -1,13 +1,14 @@
 import kivy
-
 from kivy.app import App
 from kivy.uix.camera import Camera
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.image import Image
 from kivy.clock import Clock
 
+import cv2
+import numpy as np
 
+#from utils
 
 
 class Foo(object):
@@ -33,9 +34,17 @@ class MainApp(App):
 
 
     # MAIN LOOP
+
+    def _convertToNumpy(self, image):
+        height, width = image.height, image.width
+        newvalue = np.frombuffer(image.pixels, np.uint8)
+        newvalue = newvalue.reshape(height, width, 4)
+        return newvalue
+
     def clockCallback(self, instance):
         print("IN CLOCK CALLBACK")
-        print(self.camera)
+        numpy_array = self._convertToNumpy(self.camera.texture)
+        print(numpy_array)
 
     def build(self):
         self.BUTTON_TEXT = {
@@ -48,7 +57,6 @@ class MainApp(App):
 
         btn1 = Button(text=self.BUTTON_TEXT[self.routineStarted])
         btn1.bind(on_press=self.buttonCallback)
-
 
         layout = BoxLayout(orientation='horizontal')
         layout.add_widget(self.camera)
