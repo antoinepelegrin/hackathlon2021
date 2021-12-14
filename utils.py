@@ -28,11 +28,9 @@ interpreter.allocate_tensors()
 
 def movenet(image_array):
     """Runs detection on an input image.
-
     Args:
       input_array: A [height, width, 3] numpy array represents the input image
         pixels.
-
     Returns:
       A [17, 2] float numpy array representing the predicted keypoint coordinates.
     """
@@ -62,6 +60,7 @@ def angle(end1, end2, end3):
     vec2 = (end3 - end2) / np.linalg.norm(end3 - end2)
     return np.degrees(np.arccos(np.dot(vec1, vec2)))
 
+
 def test_warrior(keypoints):
     problems = []
     if slope(keypoints[9], keypoints[10]) > 0.1:  # slope of line between two wrists
@@ -76,6 +75,26 @@ def test_warrior(keypoints):
         problems.append('Right leg not bent enough')
     print(problems)
     return problems
+
+def test_tree(keypoints):
+    problems = []
+    if distance(keypoints[13], keypoints[11], keypoints[15]) > 0.1:  # distance between knee and line between hip and ankle
+        problems.append('Left leg not straight')
+    if angle(keypoints[12], keypoints[14], keypoints[16]) > 135:  # angle between line knee-hip and knee-ankle
+        problems.append('Right foot not high enough')
+    if distance(keypoints[7], keypoints[5], keypoints[9]) > 0.1:  # distance between elbow and line from shoulder to wrist
+        problems.append('Left arm not straight')
+    if distance(keypoints[8], keypoints[6], keypoints[10]) > 0.1:  # distance between elbow and line from shoulder to wrist
+        problems.append('Right arm not straight')
+    if keypoints[9][0] > keypoints[7][0] or keypoints[10][0] > keypoints[8][0]:  # wrist above or below elbow
+        problems.append('Arms not in the air')
+    print(problems)
+    return problems
+
+TESTS = {
+    'warrior': test_warrior,
+    'tree': test_tree
+}
 
 image_path = 'images/94885683_630091017837369_7513148106968545568_n.jpg'
 #image_path = 'images/new_dir1_8_yoga_197.jpg'

@@ -7,29 +7,45 @@
         index: 0
 
 MDScreen:
-    MDToolbar:
-        id: toolbar
-        title: "YOUR VIRTUAL YOGA TRAINER" 
-        left_action_items: [["menu", lambda x: app.callback(x)]]
-        icon: "git"
-        pos_hint: {"top": 1}
-    
-    MDSwiper:
-        size_hint_y: None
-        height: root.height - toolbar.height - dp(40)
-        y: root.height - self.height - toolbar.height - dp(20)
 
-        MySwiper:
-            FitImage:
-                source: "assets/usage/top-banner.png"
-                radius: [20,]
-   
-        MySwiper:
-            FitImage:
-                source: "assets/usage/instruct.png"
-                radius: [20,]
+    MDBoxLayout:
+        orientation: 'horizontal'
         
-        MySwiper:
-            FitImage:
-                source: "assets/usage/yoga_2.jpeg"
-                radius: [20,]
+        MDLabel:
+            id: stopWatchLabel
+            text: "Start Your Routine"
+            halign: "left"
+            valign: "bottom"
+
+        Camera:
+            play: True
+            resolution: (640,640)
+            index: 0
+            halign: "center"
+        
+        MDLabel:
+            id: FeedbackLabel
+            text: "Hold the displayed pose"
+            halign: "left"
+            valign: "bottom"
+        
+        Image:
+            id: yogaPose
+            source: "assets/usage/tree.jpg"
+            allow_stretch: False
+            keep_ratio: False
+
+
+    MDBottomAppBar:
+        MDToolbar:
+            id: toolbar
+            icon: 'cast'
+            left_action_items: [["menu", lambda x: app.buttonCallback()]]
+            title: "YOUR VIRTUAL YOGA TRAINER"
+            type: 'bottom'
+            #mode: "free-end"
+            mode: 'end'
+            #mode: 'center'
+            #mode: 'free-center'
+            # Click The Button
+            on_action_button: app.buttonCallback()
