@@ -67,9 +67,9 @@ def test_warrior(keypoints):
     problems = []
     if slope(keypoints[9], keypoints[10]) > 0.1:  # slope of line between two wrists
         problems.append('Arms not parallel to ground')
-    if distance(keypoints[5], keypoints[9], keypoints[10]) > 0.01 or distance(keypoints[6], keypoints[9], keypoints[10]) > 0.05:  # distance between shoulders and line from hand to hand
+    if distance(keypoints[5], keypoints[9], keypoints[10]) > 0.1 or distance(keypoints[6], keypoints[9], keypoints[10]) > 0.05:  # distance between shoulders and line from hand to hand
         problems.append('Arms too low')
-    if distance(keypoints[7], keypoints[9], keypoints[10]) > 0.01 or distance(keypoints[8], keypoints[9], keypoints[10]) > 0.01:  # distance between elbows and line from hand to hand
+    if distance(keypoints[7], keypoints[9], keypoints[10]) > 0.1 or distance(keypoints[8], keypoints[9], keypoints[10]) > 0.01:  # distance between elbows and line from hand to hand
         problems.append('Elbows are bent')
     if distance(keypoints[13], keypoints[11], keypoints[15]) > 0.1:  # distance between knee and line between hip and ankle
         problems.append('Left leg not straight')
