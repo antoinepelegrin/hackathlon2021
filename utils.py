@@ -62,6 +62,7 @@ def angle(end1, end2, end3):
     vec2 = (end3 - end2) / np.linalg.norm(end3 - end2)
     return np.degrees(np.arccos(np.dot(vec1, vec2)))
 
+
 def test_warrior(keypoints):
     problems = []
     if slope(keypoints[9], keypoints[10]) > 0.1:  # slope of line between two wrists
@@ -76,6 +77,11 @@ def test_warrior(keypoints):
         problems.append('Right leg not bent enough')
     print(problems)
     return problems
+
+
+TESTS = {
+  'warrior': test_warrior
+}
 
 image_path = 'images/94885683_630091017837369_7513148106968545568_n.jpg'
 #image_path = 'images/new_dir1_8_yoga_197.jpg'
