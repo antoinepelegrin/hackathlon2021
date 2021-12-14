@@ -14,14 +14,6 @@ import numpy as np
 
 from utils import movenet, test_warrior
 
-
-class Foo(object):
-    def start(self):
-        Clock.schedule_interval(self.callback, 0.5)
-
-    def callback(self, dt):
-        print('In callback')
-
 class MainApp(App):
 
     # Class variables
@@ -35,7 +27,6 @@ class MainApp(App):
     # Method when pressing button
 
     def buttonCallback(self, instance):
-        print('IN BUTTON CALLBACK')
 
         if not self.routineStarted:
             self.routineStarted = True
@@ -75,10 +66,6 @@ class MainApp(App):
 
         button = Button(text=self.buttonLabel.text)
         button.bind(on_press=self.buttonCallback)
-        self.camera = Camera(play=True, resolution=(480, 480))
-
-        btn1 = Button(text=self.BUTTON_TEXT[self.routineStarted])
-        btn1.bind(on_press=self.buttonCallback)
 
         layout = BoxLayout(orientation='horizontal')
 
