@@ -9,11 +9,20 @@ from kivy.graphics.texture import Texture
 from kivy.uix.label import Label
 from kivy.animation import Animation
 from kivy.properties import StringProperty, NumericProperty
+from kivy.properties import ObjectProperty
+from kivy.uix.widget import Widget
 
 import cv2
 import numpy as np
 
-from utils import movenet, test_warrior, TESTS
+from utils import movenet, TESTS
+
+
+class ImageWidget(Widget):
+    def on_touch_down(self, touch):
+        return 0
+
+
 
 class MainApp(App):
 
@@ -26,7 +35,9 @@ class MainApp(App):
     routineStarted = False
     stopWatchLabel = Label(text = 'Start a routine!')
     buttonLabel = Label(text = 'START')
+
     camera = Camera(play=True, resolution=(640, 480))
+    texture = Camera.texture
 
     # Method when pressing button
 
@@ -42,7 +53,6 @@ class MainApp(App):
             self.count = 0
             self.stopWatchLabel.text = 'Start a routine!'
             self.buttonLabel.text = 'STOP'
-
 
     # MAIN LOOP
 
@@ -67,7 +77,8 @@ class MainApp(App):
         data = np_array.tostring()
         texture = Texture.create(size=(np_array.shape[0], np_array.shape[1]), colorfmt="rgb")
         texture.blit_buffer(data, bufferfmt="ubyte", colorfmt="rgb")
-        print(texture)
+
+        self.texture = texture.blit_buffer(data, bufferfmt="ubyte", colorfmt="rgb")
 
     def clockCallback(self, instance):
         if self.count == 10:
@@ -88,6 +99,8 @@ class MainApp(App):
     # BUILD METHOD
 
     def build(self):
+
+        print(self.texture)
 
         button = Button(text=self.buttonLabel.text)
         button.bind(on_press=self.buttonCallback)
