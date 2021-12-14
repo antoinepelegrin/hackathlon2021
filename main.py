@@ -21,7 +21,6 @@ class MainApp(App):
     mvmt_array = ['warrior']
     mvmt_nb = 0
     
-    
     count = 0
     routineStarted = False
     stopWatchLabel = Label(text = 'Start a routine!')
@@ -47,9 +46,14 @@ class MainApp(App):
 
     # MAIN LOOP
 
-    def _updateMovement(self):
-        print('CHANGING MOVEMENT')
+    def _nextMovement(self):
+        
+        self.count = 0
+        nb_of_movements = len(self.mvmt_array)
+        self.mvmt_nb = (self.mvmt_nb + 1)%nb_of_movements
 
+        print('CHANGING MOVEMENT TO: ' + self.mvmt_array[self.mvmt_nb])
+        
     def _convertToNumpy(self, image):
         height, width = image.height, image.width
         newvalue = np.frombuffer(image.pixels, np.uint8)
@@ -62,16 +66,18 @@ class MainApp(App):
 
     def clockCallback(self, instance):
 
+        if self.count == 10:
+            self._nextMovement()
+
         numpy_array = self._convertToNumpy(self.camera.texture)
         keys = movenet(numpy_array)
         
         test = TESTS[self.mvmt_array[self.mvmt_nb]]
 
-        if test(keys) == []:
+        if test(keys) != []:
             self._updateStopWatch()
         else:
             print('wrong pause!')
-
 
     # BUILD METHOD
 
