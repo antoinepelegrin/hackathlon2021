@@ -4,6 +4,7 @@ from kivy.uix.camera import Camera
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
 from kivy.clock import Clock
+from kivy.graphics.texture import Texture
 
 from kivy.uix.label import Label
 from kivy.animation import Animation
@@ -30,7 +31,6 @@ class MainApp(App):
     # Method when pressing button
 
     def buttonCallback(self, instance):
-
         if not self.routineStarted:
             self.routineStarted = True
             self.buttonLabel.text = 'STOP'
@@ -47,31 +47,36 @@ class MainApp(App):
     # MAIN LOOP
 
     def _nextMovement(self):
-        
         self.count = 0
         nb_of_movements = len(self.mvmt_array)
         self.mvmt_nb = (self.mvmt_nb + 1)%nb_of_movements
-
         print('CHANGING MOVEMENT TO: ' + self.mvmt_array[self.mvmt_nb])
-        
+
+    def _updateStopWatch(self):
+        self.count = self.count + 1
+        self.stopWatchLabel.text = str(self.count)
+
     def _convertToNumpy(self, image):
         height, width = image.height, image.width
         newvalue = np.frombuffer(image.pixels, np.uint8)
         newvalue = newvalue.reshape(height, width, 4)
         return newvalue[:,:,:3]
 
-    def _updateStopWatch(self):
-        self.count = self.count + 1
-        self.stopWatchLabel.text = str(self.count)
+    def _convertToKivy(self, np_array):
+        texture = Texture.create(size=(16, 16), colorfmt="rgb")
+        data = np_array.tostring()
+        texture.blit_buffer(data, bufferfmt="ubyte", colorfmt="rgb")
+        print(texture)
 
     def clockCallback(self, instance):
-
         if self.count == 10:
             self._nextMovement()
 
         numpy_array = self._convertToNumpy(self.camera.texture)
         keys = movenet(numpy_array)
         
+        self._convertToKivy(numpy_array)
+
         test = TESTS[self.mvmt_array[self.mvmt_nb]]
 
         if test(keys) != []:
