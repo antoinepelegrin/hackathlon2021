@@ -14,7 +14,6 @@ import numpy as np
 
 from utils import movenet, test_warrior
 
-
 class MainApp(App):
 
     # Class variables
@@ -28,7 +27,6 @@ class MainApp(App):
     # Method when pressing button
 
     def buttonCallback(self, instance):
-        print('IN BUTTON CALLBACK')
 
         if not self.routineStarted:
             self.routineStarted = True
@@ -55,12 +53,12 @@ class MainApp(App):
         self.count = self.count + 1
         self.stopWatchLabel.text = str(self.count)
 
-
     def clockCallback(self, instance):
         self._updateStopWatch()
         numpy_array = self._convertToNumpy(self.camera.texture)
         keys = movenet(numpy_array)
-        test_warrior(keys)
+        if test_warrior(keys) != []:
+            self.count = 0
 
     # BUILD METHOD
 
@@ -68,7 +66,6 @@ class MainApp(App):
 
         button = Button(text=self.buttonLabel.text)
         button.bind(on_press=self.buttonCallback)
-        self.camera = Camera(play=True, resolution=(480, 480))
 
         layout = BoxLayout(orientation='horizontal')
 
